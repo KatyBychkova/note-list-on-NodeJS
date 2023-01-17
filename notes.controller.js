@@ -19,9 +19,9 @@ async function addNote(title) {
     console.log(chalk.cyan(`Added note`), chalk.cyanBright(`"${title}"`));
 }
 
-async function getNotes(){
-    const notes = await fs.readFile(notesPath, {encoding: "utf-8"});
-    return Array.isArray(JSON.parse(notes)) ? JSON.parse(notes) : [];
+async function getNotes() {
+    const notes = await fs.readFile(notesPath, {encoding: 'utf-8'})
+    return Array.isArray(JSON.parse(notes)) ? JSON.parse(notes) : []
 }
 
 async function printNotes(){
@@ -40,6 +40,16 @@ async function removeNote(id) {
     await saveNotes(notes)
 }
 
+async function updateNote(noteData) {
+    const notes = await getNotes()
+    const index = notes.findIndex(note => note.id === noteData.id)
+    if (index >= 0) {
+        notes[index] = { ...notes[index], ...noteData }
+        await saveNotes(notes)
+        console.log(chalk.bgGreen(`Note with id="${noteData.id}" has been updated!`))
+    }
+}
+
 module.exports = {
-    addNote, printNotes, removeNote
+    addNote, getNotes, removeNote, updateNote
 }
